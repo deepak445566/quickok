@@ -34,7 +34,7 @@ function SubmitLinks() {
         return;
       }
 
-      const { data } = await axios.post('/api/urls/submit-batch', {
+      const { data } = await axios.post('/api/urls/submit', {
         urls: urlList,
         dripMode,
       });

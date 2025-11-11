@@ -2,23 +2,31 @@ import express from 'express'
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
+import connectDB from './config/db.js';
+import UserRouter from './routers/UserRouters.js';
+import router from './routers/urlRoutes.js';
+
+
 
 dotenv.config();
 const app = express();
 
-// ✅ CORS Configuration
+// ✅ Pehle CORS use karo
+app.use(cookieParser());
+
+// ✅ Simple CORS Configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://stately-babka-a4bbda.netlify.app'
+];
+
 app.use(cors({
-  origin: [
-    'https://stately-babka-a4bbda.netlify.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ],
+  origin: allowedOrigins,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
 }));
 
-app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -32,37 +40,11 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// ✅ Import routers with dynamic imports to avoid crashes
-let UserRouter, router;
-
-try {
-  console.log('🔄 Importing UserRouters...');
-  UserRouter = (await import('./routers/UserRouters.js')).default;
-  app.use('/api/auth', UserRouter);
-  console.log('✅ UserRouters loaded successfully');
-} catch (error) {
-  console.error('❌ Failed to load UserRouters:', error);
-  // Create fallback routes
-  app.post('/api/auth/register', (req, res) => {
-    res.json({ success: true, message: 'Fallback register route' });
-  });
-  app.post('/api/auth/login', (req, res) => {
-    res.json({ success: true, message: 'Fallback login route' });
-  });
-}
-
-try {
-  console.log('🔄 Importing urlRoutes...');
-  router = (await import('./routers/urlRoutes.js')).default;
-  app.use("/api/urls", router);
-  console.log('✅ urlRoutes loaded successfully');
-} catch (error) {
-  console.error('❌ Failed to load urlRoutes:', error);
-}
-
+app.use('/api/auth', UserRouter);
+app.use("/api/urls",router)
 // ✅ Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('🚨 Server Error:', err);
+  console.error('Server Error:', err);
   res.status(500).json({ 
     success: false,
     message: 'Internal Server Error',
@@ -70,24 +52,26 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ✅ 404 Handler
-app.use((req, res) => {
-  console.log(`❌ 404: Route ${req.originalUrl} not found`);
+// ✅ 404 Handler - YEH USE KARO (Proper way)
+app.use((req, res, next) => {
   res.status(404).json({
     success: false,
-    message: `Route ${req.originalUrl} not found`,
-    availableRoutes: [
-      'GET /api/health',
-      'POST /api/auth/register',
-      'POST /api/auth/login',
-      'GET /api/auth/me'
-    ]
+    message: `Route ${req.originalUrl} not found`
   });
 });
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+// ✅ Server startup
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🔗 Allowed Origins: ${allowedOrigins.join(', ')}`);
+    });
+  })
+  .catch((error) => {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  });
