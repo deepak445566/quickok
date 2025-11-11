@@ -11,15 +11,15 @@ import Fqs from "./components/Fqs";
 import Start from "./components/Start";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+// ✅ Correct import - use the original path
 import Login from "./pages/Container/Login";
-
 
 import SubmitLinks from "./pages/SubmitLinks";
 import History from "./pages/Container/History";
 import Dashboard from "./pages/Container/Dashboard";
+
+// ✅ Add this import with other imports
 import Grantaccess from "./pages/Container/Grantaccess";
-
-
 
 function AppContent() {
   const { user, showLogin, loading } = useAppContext();
@@ -43,8 +43,13 @@ function AppContent() {
           element={
             <>
               <Home />
+              <Type />
               <Process />
+              <Phone />
+              <Pricing />
+              <Payment />
               <Fqs />
+              <Start />
               <Footer />
             </>
           }
@@ -75,13 +80,13 @@ function AppContent() {
             user ? <History /> : <Navigate to="/" replace />
           } 
         />
-        
-        <Route 
+         <Route 
           path="/grantaccess" 
           element={
             user ? <Grantaccess/> : <Navigate to="/" replace />
           } 
         />
+        
         
 
         {/* ✅ Redirect any unknown routes to home */}
@@ -103,3 +108,7 @@ function App() {
 }
 
 export default App;
+
+
+
+  

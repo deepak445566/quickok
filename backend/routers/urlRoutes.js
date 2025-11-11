@@ -1,8 +1,8 @@
 import express from 'express';
 
 
-import { checkIndexingStatus, getUrlHistory, getUserStats, submitUrl, submitUrlBatch } from '../controllers.js/urlController.js';
 import { protectUser } from '../middleware/protectUser.js';
+import { checkIndexingStatus, getUrlHistory, getUserStats, submitUrl, submitUrlBatch } from '../controllers/urlController.js';
 
 const router = express.Router();
 
