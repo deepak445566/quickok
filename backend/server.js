@@ -9,7 +9,7 @@ const app = express();
 // ✅ CORS Configuration
 app.use(cors({
   origin: [
-    'https://stellarserve.netlify.app',
+    'https://stately-babka-a4bbda.netlify.app',
     'http://localhost:5173',
     'http://localhost:3000'
   ],
