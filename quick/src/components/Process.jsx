@@ -1,7 +1,7 @@
 export default function Process() {
   const steps = [
-    { number: 1, title: "Create Account", desc: "Sign up for free and purchase credits to get started with URL indexing" },
-    { number: 2, title: "Submit URLs", desc: "Add your URLs via dashboard or Telegram bot for instant processing" },
+    { number: 1, title: "Create Account", desc: "Sign up for free and start with URL indexing" },
+    { number: 2, title: "Submit URLs", desc: "Add your URLs in Submit url" },
     { number: 3, title: "Get Indexed", desc: "Track your submissions and watch them get indexed by search engines" },
   ];
 

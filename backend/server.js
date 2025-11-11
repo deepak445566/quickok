@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
 import connectDB from './config/db.js';
 import UserRouter from './routers/UserRouters.js';
+import router from './routers/urlRoutes.js';
 
 
 
@@ -40,7 +41,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/auth', UserRouter);
-
+app.use("/api/urls",router)
 // ✅ Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Server Error:', err);

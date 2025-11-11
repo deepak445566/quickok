@@ -13,13 +13,27 @@ export const useAppContext = () => {
 
 export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // ✅ Start with loading true
+  const [loading, setLoading] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
 
   // ✅ Axios instance with base URL
   const axiosInstance = axios.create({
     baseURL: 'http://localhost:4000',
   });
+
+  // ✅ AUTO-ADD TOKEN TO EVERY REQUEST
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
 
   // ✅ Auto-login on app start and page refresh
   useEffect(() => {
@@ -30,9 +44,7 @@ export const AppProvider = ({ children }) => {
         
         if (token && userData) {
           // ✅ Verify token with backend
-          const { data } = await axiosInstance.get('/api/auth/me', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const { data } = await axiosInstance.get('/api/auth/me');
           
           if (data.success) {
             setUser(data.user);
@@ -51,7 +63,7 @@ export const AppProvider = ({ children }) => {
         localStorage.removeItem('user');
         setUser(null);
       } finally {
-        setLoading(false); // ✅ Loading complete
+        setLoading(false);
       }
     };
 
@@ -61,12 +73,7 @@ export const AppProvider = ({ children }) => {
   // ✅ Fetch user data function
   const fetchUser = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-      
-      const { data } = await axiosInstance.get('/api/auth/me', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const { data } = await axiosInstance.get('/api/auth/me');
       
       if (data.success) {
         setUser(data.user);

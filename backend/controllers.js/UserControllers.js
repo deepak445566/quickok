@@ -1,4 +1,5 @@
-
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../models/Usermodel.js";
@@ -208,4 +209,150 @@ export const logoutUser = async (req, res) => {
       message: "Internal server error" 
     });
   }
+};
+
+
+// Password Reset Request
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required"
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      // Don't reveal if email exists or not
+      return res.json({
+        success: true,
+        message: "If email exists, password reset link will be sent"
+      });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
+
+    // Save token to user
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiry = resetTokenExpiry;
+    await user.save();
+
+    // Send email (configure nodemailer first)
+    try {
+      await sendPasswordResetEmail(user.email, resetToken);
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError);
+      // Still return success but log the error
+    }
+
+    res.json({
+      success: true,
+      message: "Password reset link sent to your email"
+    });
+
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+// Reset Password
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Token and new password are required"
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters long"
+      });
+    }
+
+    // Find user by valid token
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiry: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired reset token"
+      });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user password and clear reset token
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiry = undefined;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Password reset successfully"
+    });
+
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+// Email sending function
+const sendPasswordResetEmail = async (email, token) => {
+  const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+  
+  const transporter = nodemailer.createTransporter({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Password Reset Request - QuickIndexing',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #2563eb;">Password Reset Request</h2>
+        <p>You requested to reset your password for QuickIndexing account.</p>
+        <p>Click the button below to reset your password:</p>
+        <a href="${resetLink}" 
+           style="display: inline-block; padding: 12px 24px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px; margin: 16px 0;">
+          Reset Password
+        </a>
+        <p>This link will expire in 15 minutes.</p>
+        <p>If you didn't request this, please ignore this email.</p>
+        <hr style="margin: 20px 0;">
+        <p style="color: #666; font-size: 12px;">
+          QuickIndexing Team
+        </p>
+      </div>
+    `
+  };
+
+  await transporter.sendMail(mailOptions);
 };

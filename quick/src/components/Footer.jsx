@@ -19,17 +19,9 @@ const Footer = () => {
             <li><a href="#" className="hover:text-blue-400 transition">Help Guide</a></li>
             <li><a href="#" className="hover:text-blue-400 transition">FAQ</a></li>
             <li><a href="#" className="hover:text-blue-400 transition">Drip Guide</a></li>
-            <li><a href="#" className="hover:text-blue-400 transition">Telegram Bot</a></li>
           </ul>
         </div>
 
-        {/* Column 3 */}
-        <div>
-          <h3 className="text-blue-500 text-lg font-semibold mb-3">Quick Links</h3>
-          <ul className="space-y-2">
-            <li><a href="#" className="hover:text-blue-400 transition">Login</a></li>
-          </ul>
-        </div>
 
         {/* Column 4 */}
         <div>
@@ -37,7 +29,6 @@ const Footer = () => {
           <ul className="space-y-2">
             <li><a href="#" className="hover:text-blue-400 transition">Privacy Policy</a></li>
             <li><a href="#" className="hover:text-blue-400 transition">Terms & Conditions</a></li>
-            <li><a href="#" className="hover:text-blue-400 transition">Refunds Policy</a></li>
             <li><a href="#" className="hover:text-blue-400 transition">Contact Us</a></li>
           </ul>
         </div>

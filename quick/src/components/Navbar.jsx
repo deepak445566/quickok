@@ -22,7 +22,7 @@ function Navbar() {
   };
 
   const goToUserHome = () => {
-    navigate('/userhome');
+    navigate('/Dashboard');
   };
 
   if (loading) {
@@ -44,14 +44,12 @@ function Navbar() {
           <h1 className="orbi text-lg">StellarServe Indexing Tool</h1>
         </a>
 
-        {/* ✅ UPDATED: Desktop Nav Links - Conditional based on login */}
-        <div className="hidden md:flex items-center gap-6 transition duration-500 orbi">
-          {/* Always show Home */}
+        {/* ✅ Desktop Nav Links */}
+        <div className="hidden md:flex items-center gap-8 transition duration-500 orbi">
           <a href="/" className="hover:text-purple-500 transition">
             Home
           </a>
 
-          {/* Show these only when user is logged in */}
           {user && (
             <>
               <button 
@@ -66,31 +64,29 @@ function Navbar() {
               <a href="/history" className="hover:text-purple-500 transition">
                 History
               </a>
-              <a href="/credits" className="hover:text-purple-500 transition">
-                Credits
-              </a>
-              <a href="/account" className="hover:text-purple-500 transition">
-                Account
+              {/* ✅ NEW: Grant Access Link */}
+              <a href="/grantaccess" className="hover:text-purple-500 transition">
+                Grant Access
               </a>
             </>
           )}
         </div>
 
-        {/* ✅ UPDATED: Desktop Buttons */}
-        <div className="hidden md:flex items-center gap-4">
+        {/* Desktop Buttons */}
+        <div className="hidden md:flex items-center gap-6">
           {user ? (
             <>
               <span className="text-white text-sm">Welcome, {user.fullname}</span>
               <button 
                 onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 active:scale-95 transition-all rounded-xl text-sm"
+                className="px-5 py-2.5 bg-red-600 hover:bg-red-700 active:scale-95 transition-all rounded-xl text-sm"
               >
                 Logout
               </button>
             </>
           ) : (
             <button 
-              className="px-6 py-2.5 bg-[#2563EB] hover:bg-[#1d4ed8] active:scale-95 transition-all rounded-xl text-sm" 
+              className="px-7 py-2.5 bg-[#2563EB] hover:bg-[#1d4ed8] active:scale-95 transition-all rounded-xl text-sm" 
               onClick={handleLogin}
             >
               Login
@@ -122,67 +118,67 @@ function Navbar() {
         </button>
       </nav>
 
-      {/* ✅ UPDATED: Mobile Navigation Overlay */}
+      {/* ✅ Mobile Navigation Overlay */}
       <div
-        className={`fixed inset-0 z-[100] bg-[#05091A] text-white backdrop-blur flex flex-col items-center justify-center text-lg gap-6 md:hidden transition-transform duration-300 ${
+        className={`fixed inset-0 z-[100] bg-[#05091A] text-white backdrop-blur flex flex-col items-center justify-center text-lg gap-8 md:hidden transition-transform duration-300 ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Always show Home */}
-        <a href="/" onClick={closeMenuHandler} className="hover:text-purple-500 transition">
+        <a href="/" onClick={closeMenuHandler} className="hover:text-purple-500 transition py-2">
           Home
         </a>
 
-        {/* Show these only when user is logged in */}
         {user && (
           <>
             <button 
               onClick={() => { goToUserHome(); closeMenuHandler(); }}
-              className="hover:text-purple-500 transition bg-transparent border-none cursor-pointer text-lg"
+              className="hover:text-purple-500 transition bg-transparent border-none cursor-pointer text-lg py-2"
             >
               Dashboard
             </button>
-            <a href="/submitlinks" onClick={closeMenuHandler} className="hover:text-purple-500 transition">
+            <a href="/submitlinks" onClick={closeMenuHandler} className="hover:text-purple-500 transition py-2">
               Submit Links
             </a>
-            <a href="/history" onClick={closeMenuHandler} className="hover:text-purple-500 transition">
+            <a href="/history" onClick={closeMenuHandler} className="hover:text-purple-500 transition py-2">
               History
             </a>
-            <a href="/credits" onClick={closeMenuHandler} className="hover:text-purple-500 transition">
+            <a href="/credits" onClick={closeMenuHandler} className="hover:text-purple-500 transition py-2">
               Credits
             </a>
-            <a href="/account" onClick={closeMenuHandler} className="hover:text-purple-500 transition">
+            <a href="/account" onClick={closeMenuHandler} className="hover:text-purple-500 transition py-2">
               Account
+            </a>
+            {/* ✅ NEW: Grant Access Link */}
+            <a href="/grantaccess" onClick={closeMenuHandler} className="hover:text-purple-500 transition py-2">
+              Grant Access
             </a>
           </>
         )}
 
-        {/* Login/Logout Buttons */}
         {user ? (
-          <div className="flex flex-col gap-4 items-center mt-4">
+          <div className="flex flex-col gap-6 items-center mt-6">
             <span className="text-white text-center">
               Welcome,<br/>{user.fullname}
             </span>
             <button 
               onClick={() => { handleLogout(); closeMenuHandler(); }}
-              className="px-6 py-2 bg-red-600 hover:bg-red-700 transition-all rounded-xl"
+              className="px-8 py-3 bg-red-600 hover:bg-red-700 transition-all rounded-xl"
             >
               Logout
             </button>
           </div>
         ) : (
           <button 
-            className="px-8 py-3 bg-[#2563EB] hover:bg-[#1d4ed8] transition-all rounded-xl mt-4" 
+            className="px-10 py-3.5 bg-[#2563EB] hover:bg-[#1d4ed8] transition-all rounded-xl mt-6" 
             onClick={() => { handleLogin(); closeMenuHandler(); }}
           >
             Login
           </button>
         )}
 
-        {/* Close Button */}
         <button
           onClick={closeMenuHandler}
-          className="active:ring-3 active:ring-white aspect-square size-10 p-1 items-center justify-center bg-purple-600 hover:bg-purple-700 transition text-white rounded-md flex mt-8"
+          className="active:ring-3 active:ring-white aspect-square size-12 p-1 items-center justify-center bg-purple-600 hover:bg-purple-700 transition text-white rounded-md flex mt-10"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

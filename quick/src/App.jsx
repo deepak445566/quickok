@@ -11,8 +11,15 @@ import Fqs from "./components/Fqs";
 import Start from "./components/Start";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import Login from "./pages/Login";
-import UserHome from "./pages/Container/UserHome";
+import Login from "./pages/Container/Login";
+
+
+import SubmitLinks from "./pages/SubmitLinks";
+import History from "./pages/Container/History";
+import Dashboard from "./pages/Container/Dashboard";
+import Grantaccess from "./pages/Container/Grantaccess";
+
+
 
 function AppContent() {
   const { user, showLogin, loading } = useAppContext();
@@ -36,33 +43,53 @@ function AppContent() {
           element={
             <>
               <Home />
-              <Type />
               <Process />
-              <Phone />
-              <Pricing />
-              <Payment />
               <Fqs />
-              <Start />
               <Footer />
             </>
           }
         />
 
-        {/* ✅ UserHome Route - Only show UserHome component */}
+        {/* ✅ Public Auth Routes - Accessible without login */}
+        <Route path="/login" element={<Login />} />
+       
+
+        {/* ✅ Protected Routes - Only accessible when logged in */}
         <Route 
-          path="/userhome" 
+          path="/dashboard" 
           element={
-            user ? (
-              <UserHome />
-            ) : (
-              <Navigate to="/" replace />
-            )
+            user ? <Dashboard /> : <Navigate to="/" replace />
           } 
         />
+        
+        <Route 
+          path="/submitlinks" 
+          element={
+            user ? <SubmitLinks /> : <Navigate to="/" replace />
+          } 
+        />
+        
+        <Route 
+          path="/history" 
+          element={
+            user ? <History /> : <Navigate to="/" replace />
+          } 
+        />
+        
+        <Route 
+          path="/grantaccess" 
+          element={
+            user ? <Grantaccess/> : <Navigate to="/" replace />
+          } 
+        />
+        
+
+        {/* ✅ Redirect any unknown routes to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {/* ✅ Login Modal */}
-      {showLogin && <Login />}
+      {/* ✅ Login Modal - Only show when user is not logged in */}
+      {showLogin && !user && <Login />}
     </Router>
   );
 }

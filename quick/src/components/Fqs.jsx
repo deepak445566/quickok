@@ -7,20 +7,10 @@ const faqs = [
       "  StellarServe Indexing Tool is a fast and reliable URL indexing service that helps get your web pages discovered by search engines quickly.",
   },
   {
-    question: "How much does it cost?",
-    answer:
-      "We use a credit-based system. Each URL submission costs 1 credit. You can purchase credits in packages starting from ₹350. Contact support for payment assistance.",
-  },
-  {
     question: "How long does indexing take?",
     answer:
-      "Most URLs are processed within 24-48 hours. Search engine indexing depends on various factors but is typically faster than organic discovery.",
-  },
-   {
-    question: "Can I use the Telegram bot?",
-    answer:
-      "Yes! Use @  StellarServe Indexing ToolBot to submit URLs directly from Telegram.",
-  },
+      "Most URLs are processed within 3-4 day's. Search engine indexing depends on various factors but is typically faster than organic discovery.",
+  }
 ];
 
 const Fqs = () => {
