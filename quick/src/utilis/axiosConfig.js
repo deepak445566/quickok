@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // ✅ Backend base URL
-const BASE_URL = 'http://localhost:4000'; // Your backend URL
+const BASE_URL = 'https://stellarserve.onrender.com'; // Your backend URL
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,

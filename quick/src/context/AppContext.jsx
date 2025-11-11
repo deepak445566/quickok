@@ -18,7 +18,7 @@ export const AppProvider = ({ children }) => {
 
   // ✅ Axios instance with base URL
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:4000',
+    baseURL: 'https://stellarserve.onrender.com',
   });
 
   // ✅ AUTO-ADD TOKEN TO EVERY REQUEST
