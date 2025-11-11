@@ -16,7 +16,6 @@ app.use(cookieParser());
 
 // ✅ Simple CORS Configuration
 const allowedOrigins = [
-  'http://localhost:5173',
   'https://stellarserve.netlify.app'
 ];
 
