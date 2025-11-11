@@ -17,7 +17,7 @@ app.use(cookieParser());
 // ✅ Simple CORS Configuration
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://game-tawny-nine-64.vercel.app'
+  'https://stellarserve.netlify.app'
 ];
 
 app.use(cors({
