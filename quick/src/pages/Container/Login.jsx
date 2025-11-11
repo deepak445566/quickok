@@ -1,3 +1,4 @@
+// Login.jsx - CORRECTED VERSION
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext.jsx';
@@ -26,7 +27,6 @@ function Login() {
     setSubmitting(true);
 
     try {
-      // ✅ Simple payload structure
       let payload, endpoint;
       
       if (state === "register") {
@@ -53,7 +53,6 @@ function Login() {
       console.log("✅ Auth success:", data);
 
       if (data.success) {
-        // Store token and user data
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
@@ -63,10 +62,9 @@ function Login() {
         }
         
         setShowLogin(false);
-        navigate('/userhome');
+        navigate('/dashboard');
         resetForm();
         
-        // Refresh user data
         setTimeout(() => {
           fetchUser();
         }, 1000);
@@ -74,19 +72,15 @@ function Login() {
     } catch (error) {
       console.error("🚨 Auth error:", error);
       
-      // Better error handling
       let errorMessage = "Something went wrong";
       
       if (error.response) {
-        // Server responded with error status
         errorMessage = error.response.data?.message || 
                       error.response.data?.error || 
                       `Server error: ${error.response.status}`;
       } else if (error.request) {
-        // Request was made but no response received
         errorMessage = "No response from server. Check your connection.";
       } else {
-        // Something else happened
         errorMessage = error.message;
       }
       
@@ -117,7 +111,6 @@ function Login() {
     resetForm();
   };
 
-  // Forgot Password handler
   const handleForgotPassword = () => {
     setShowLogin(false);
     navigate('/forgot-password');
@@ -234,7 +227,7 @@ function Login() {
           />
         </div>
 
-        {/* Forgot Password Link - ONLY SHOW IN LOGIN MODE */}
+        {/* Forgot Password Link */}
         {state === "login" && (
           <div className="text-right">
             <button
@@ -284,4 +277,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Login; // ✅ ONLY ONE EXPORT
